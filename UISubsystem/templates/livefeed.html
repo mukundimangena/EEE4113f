@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penguin Sanctuary - Live Feed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .stream-card {
+        transition: all 0.3s ease;
+      }
+      .stream-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      .stream-active {
+        border: 2px solid #3b82f6;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <!-- Sidebar Information-->
+    <div class="fixed top-0 left-0 h-screen w-64 bg-gray-100 p-4">
+      <!-- Logo + Title -->
+      <a href="/index" class="flex items-center mb-6 text-gray-800 no-underline">
+        <img src="/static/src/logo.svg" alt="Home" class="w-10 h-8 mr-4" />
+        <span class="text-xl font-semibold text-3xl text-si">PenguinCo</span>
+      </a>
+
+      <hr class="mb-4 border-gray-300" />
+
+      <!-- Nav Links -->
+      <ul class="space-y-2">
+        <!-- Home -->
+        <li class="group mt-0 hover:bg-blue-600 rounded-md transition-colors duration-200">
+          <a href="/index" class="flex items-center px-3 py-2 text-gray-700 group-hover:text-white rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4 group-hover:stroke-white transition-colors duration-200" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+            Home
+          </a>
+        </li>
+
+        <!-- Live Feed (Active) -->
+        <li class="group bg-blue-100 rounded-md transition-colors duration-200">
+          <a href="/livefeed" class="flex items-center px-3 py-2 text-blue-700 rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4 stroke-blue-600 transition-colors duration-200">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+            </svg>
+            Live Feed
+          </a>
+        </li>
+
+        <!-- Notifications -->
+        <li class="group hover:bg-blue-600 rounded-md transition-colors duration-200">
+          <a href="/notifications" class="flex items-center px-3 py-2 text-gray-700 group-hover:text-white rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4 group-hover:stroke-white transition-colors duration-200">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
+            </svg>
+            Notifications
+          </a>
+        </li>
+
+        <!-- System Logs -->
+        <li class="group hover:bg-blue-600 rounded-md transition-colors duration-200">
+          <a href="/logs" class="flex items-center px-3 py-2 text-gray-700 group-hover:text-white rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4 group-hover:stroke-white transition-colors duration-200">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+            </svg>
+            System Logs
+          </a>
+        </li>
+
+        <!-- Settings -->
+        <li class="group hover:bg-blue-600 rounded-md transition-colors duration-200">
+          <a href="/settings" class="flex items-center px-3 py-2 text-gray-700 group-hover:text-white rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4 group-hover:stroke-white transition-colors duration-200">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+            Settings
+          </a>
+        </li>
+      </ul>
+      <hr class="my-4 border-gray-300" />
+
+      <!-- User Menu -->
+      <div class="relative inline-block text-left top-0">
+        <button id="dropdownButton" onclick="toggleDropdown()" class="inline-flex items-center justify-center w-64 text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none">
+          <img src="https://github.com/mdo.png" alt="User" class="w-8 h-8 rounded-full mr-auto" />
+          <strong>Dr Christina</strong>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="dropdownMenu" class="hidden absolute bottom-full right-0 mb-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">New project...</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+          <hr class="border-t border-gray-200" />
+          <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-100">Sign out</a>
+        </div>
+      </div>
+
+      <script>
+        function toggleDropdown() {
+          const menu = document.getElementById("dropdownMenu");
+          menu.classList.toggle("hidden");
+        }
+
+        document.addEventListener("click", function (event) {
+          const dropdown = document.getElementById("dropdownMenu");
+          const button = document.querySelector('[onclick="toggleDropdown()"]');
+
+          if (!dropdown.contains(event.target) && event.target !== button && !button.contains(event.target)) {
+            dropdown.classList.add("hidden");
+          }
+        });
+      </script>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-72 p-8 w-full mr-3">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold">Live Feed</h1>
+        <div class="flex space-x-4">
+          <button id="startStreamBtn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+            </svg>
+            Start Stream
+          </button>
+          <button id="stopStreamBtn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition flex items-center" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd" />
+            </svg>
+            Stop Stream
+          </button>
+        </div>
+      </div>
+
+      <!-- Stream Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Stream 1 -->
+        <div id="stream1" class="stream-card stream-active bg-white rounded-lg shadow-md overflow-hidden cursor-pointer">
+          <div class="relative bg-black h-48 flex items-center justify-center">
+            <div id="stream1Preview" class="text-white text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <p>Click to view</p>
+            </div>
+            <div id="stream1Live" class="hidden absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded flex items-center">
+              <span class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span>
+              LIVE
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Ocean East Facing Area</h3>
+            <p class="text-gray-600 text-sm">Main penguin nesting grounds</p>
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Sector 4B - Coordinates: 62.1° S, 58.4° W
+            </div>
+          </div>
+        </div>
+
+        <!-- Stream 2 -->
+        <div id="stream2" class="stream-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer">
+          <div class="relative bg-black h-48 flex items-center justify-center">
+            <div id="stream2Preview" class="text-white text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <p>Click to view</p>
+            </div>
+            <div id="stream2Live" class="hidden absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded flex items-center">
+              <span class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span>
+              LIVE
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Section A</h3>
+            <p class="text-gray-600 text-sm">Northern Entrance Gate</p>
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Sector 2A - Coordinates: 62.0° S, 58.5° W
+            </div>
+          </div>
+        </div>
+
+        <!-- Stream 3 -->
+        <div id="stream3" class="stream-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer">
+          <div class="relative bg-black h-48 flex items-center justify-center">
+            <div id="stream3Preview" class="text-white text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <p>Click to view</p>
+            </div>
+            <div id="stream3Live" class="hidden absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded flex items-center">
+              <span class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span>
+              LIVE
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Swimming Pool</h3>
+            <p class="text-gray-600 text-sm">Main penguin swimming area</p>
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Sector 3C - Coordinates: 62.2° S, 58.3° W
+            </div>
+          </div>
+        </div>
+
+        <!-- Stream 4 -->
+        <div id="stream4" class="stream-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer">
+          <div class="relative bg-black h-48 flex items-center justify-center">
+            <div id="stream4Preview" class="text-white text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <p>Click to view</p>
+            </div>
+            <div id="stream4Live" class="hidden absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded flex items-center">
+              <span class="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span>
+              LIVE
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Perimeter Watch</h3>
+            <p class="text-gray-600 text-sm">Eastern perimeter security</p>
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Sector 1D - Coordinates: 62.3° S, 58.2° W
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Stream Viewer -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div class="bg-black h-96 flex items-center justify-center">
+          <div id="mainStreamPlaceholder" class="text-white text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <h3 class="text-xl font-bold mb-2">No Stream Selected</h3>
+            <p class="max-w-md mx-auto">Click on one of the camera feeds above to view the live stream</p>
+          </div>
+          <video id="mainStreamPlayer" class="hidden w-full h-full object-contain" controls></video>
+        </div>
+        <div class="p-4">
+          <h2 id="currentStreamTitle" class="text-xl font-bold">Select a stream to view</h2>
+          <div id="currentStreamLocation" class="text-gray-600"></div>
+          <div class="mt-4 flex space-x-4">
+            <button id="fullscreenBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              Fullscreen
+            </button>
+            <button id="snapshotBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Take Snapshot
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Current active stream
+      let activeStream = 'stream1';
+      let isStreaming = false;
+
+      // Initialize stream selection
+      document.addEventListener('DOMContentLoaded', function() {
+        // Highlight active stream in sidebar
+        document.querySelector('a[href="/livefeed"]').parentElement.classList.add('bg-blue-100');
+        
+        // Set up stream card click handlers
+        document.querySelectorAll('.stream-card').forEach(card => {
+          card.addEventListener('click', function() {
+            // Remove active class from all cards
+            document.querySelectorAll('.stream-card').forEach(c => {
+              c.classList.remove('stream-active');
+              c.classList.remove('border-blue-500');
+            });
+            
+            // Add active class to clicked card
+            this.classList.add('stream-active');
+            this.classList.add('border-blue-500');
+            
+            // Update active stream
+            activeStream = this.id;
+            
+            // Update main viewer
+            updateMainStreamViewer();
+          });
+        });
+
+        // Set up start/stop stream buttons
+        document.getElementById('startStreamBtn').addEventListener('click', startStream);
+        document.getElementById('stopStreamBtn').addEventListener('click', stopStream);
+        
+        // Set up fullscreen button
+        document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+        
+        // Set up snapshot button
+        document.getElementById('snapshotBtn').addEventListener('click', takeSnapshot);
+      });
+
+      // Update main stream viewer
+      function updateMainStreamViewer() {
+        const card = document.getElementById(activeStream);
+        const title = card.querySelector('h3').textContent;
+        const location = card.querySelector('p').textContent + ' - ' + 
+                        card.querySelector('.text-gray-500').textContent;
+        
+        document.getElementById('currentStreamTitle').textContent = title;
+        document.getElementById('currentStreamLocation').textContent = location;
+        
+        if (isStreaming) {
+          // In a real app, you would connect to the actual stream source here
+          document.getElementById('mainStreamPlaceholder').classList.add('hidden');
+          document.getElementById('mainStreamPlayer').classList.remove('hidden');
+          
+          // Simulate stream loading
+          document.getElementById('mainStreamPlayer').src = `https://example.com/streams/${activeStream}`;
+        }
+      }
+
+      // Start stream function
+      function startStream() {
+        isStreaming = true;
+        document.getElementById('startStreamBtn').disabled = true;
+        document.getElementById('stopStreamBtn').disabled = false;
+        
+        // Show LIVE indicator on active stream
+        document.getElementById(`${activeStream}Live`).classList.remove('hidden');
+        
+        // Update main viewer
+        updateMainStreamViewer();
+      }
+
+      // Stop stream function
+      function stopStream() {
+        isStreaming = false;
+        document.getElementById('startStreamBtn').disabled = false;
+        document.getElementById('stopStreamBtn').disabled = true;
+        
+        // Hide LIVE indicator
+        document.getElementById(`${activeStream}Live`).classList.add('hidden');
+        
+        // Reset main viewer
+        document.getElementById('mainStreamPlaceholder').classList.remove('hidden');
+        document.getElementById('mainStreamPlayer').classList.add('hidden');
+      }
+      
+
+      // Toggle fullscreen
+      function toggleFullscreen() {
+        const player = document.getElementById('mainStreamPlayer');
+        if (!document.fullscreenElement) {
+          if (player.requestFullscreen) {
+            player.requestFullscreen();
+          } else if (player.webkitRequestFullscreen) {
+            player.webkitRequestFullscreen();
+          } else if (player.msRequestFullscreen) {
+            player.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      }
+
+      // Take snapshot
+      function takeSnapshot() {
+        if (!isStreaming) {
+          alert('Please start the stream first');
+          return;
+        }
+        
+        // In a real app, you would capture the current frame here
+        alert('Snapshot captured! This would save the current frame in a real implementation.');
+        
+        // Simulate flash effect
+        const flash = document.createElement('div');
+        flash.className = 'absolute inset-0 bg-white opacity-70 z-10';
+        document.querySelector('.bg-black').appendChild(flash);
+        setTimeout(() => flash.remove(), 200);
+      }
+    </script>
+  </body>
+</html>
