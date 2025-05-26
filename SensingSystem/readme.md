@@ -1,5 +1,7 @@
 Predator Detection System
-Overview
+
+
+
 This project implements a predator detection system using two ESP32-based microcontrollers: a main ESP32 (e.g., ESP32 DevKit) and an ESP32-CAM. The system is designed to monitor penguin colomies for potential predators using multiple sensors and a camera. When a threat is detected, the system triggers image captures and sends sensor data and images to a server via HTTP POST requests in JSON format.
 Components
 
